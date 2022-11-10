@@ -63,7 +63,8 @@ def check_and_save_good_nft(good_nft):
     good_nft_unic_str = '\n'.join([json.dumps(x) for x in good_nft_unic])
 
     with open('lms.txt', 'a') as f:
-        f.write(good_nft_unic_str + '\n')
+        if good_nft_unic_str:
+            f.write(good_nft_unic_str + '\n')
 
     return good_nft_unic_str
 
