@@ -92,7 +92,7 @@ def get_good_nft(nfts, rarity):
         if month_profit >= EXPECTED_MONTH_PROFIT:
             good_nft.append({
                 'link': 'https://market.letmespeak.org/escrow/' + nft.get('id'),
-                'price': price, 'profit': profit,
+                'price': price, 'profit': profit, 'visa': visa_left,
                 'roi': roi, 'month_profit': month_profit
             })
 
