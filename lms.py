@@ -38,8 +38,8 @@ def get_data(page, rarity, price_max):
         try:
             res = requests.get(
                 f'https://api-crypto.letmespeak.org/api/escrow?priceMin=1'
-                f'&priceMax={price_max}&visaLeftMin=3&visaLeftMax=240&rarity={rarity}'
-                f'&page={page}&sortBy=LowestPrice'
+                f'&priceMax={price_max}&visaLeftMin=3&visaLeftMax=240'
+                f'&rarity={rarity}&page={page}&sortBy=LowestPrice'
             )
             res_dict = json.loads(res.text)
             success = 1
@@ -48,14 +48,14 @@ def get_data(page, rarity, price_max):
             sleep(5)
             retries += 1
 
-    return False
+    return 'get_data error'
 
 
 def get_all_data(rarity, price_max):
     res = []
     page = 1
     data = get_data(page, rarity, price_max)
-    if not data:
+    if data == 'get_data error':
         return 'get_data error'
     while data:
         res += data
