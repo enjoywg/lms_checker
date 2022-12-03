@@ -4,6 +4,7 @@ import requests
 import telegram
 from dotenv import load_dotenv
 from time import sleep
+from datetime import date
 
 load_dotenv()
 
@@ -15,7 +16,7 @@ LEG_ZERO_PRICE = 35
 EPIC_DAILY_INCOME = 0.5
 LEG_DAILY_INCOME = 1.25
 PRICE_MAX_EPIC = 30
-PRICE_MAX_LEG = 40
+PRICE_MAX_LEG = 50
 
 
 def send_message(message):
@@ -79,7 +80,7 @@ def check_and_save_good_nft(good_nft):
 
     with open('lms.txt', 'a') as f:
         if good_nft_unic_str:
-            f.write(good_nft_unic_str + '\n')
+            f.write(str(date.today()) + '\n' + good_nft_unic_str + '\n')
 
     return good_nft_unic_str
 
