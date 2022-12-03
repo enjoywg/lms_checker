@@ -18,17 +18,6 @@ PRICE_MAX_EPIC = 30
 PRICE_MAX_LEG = 40
 
 
-def get_data(page, rarity, price_max):
-    res = requests.get(
-        f'https://api-crypto.letmespeak.org/api/escrow?priceMin=1'
-        f'&priceMax={price_max}&visaLeftMin=3&visaLeftMax=240&rarity={rarity}'
-        f'&page={page}&sortBy=LowestPrice'
-    )
-    res_dict = json.loads(res.text)
-
-    return res_dict.get('items')
-
-
 def send_message(message):
     """Send message to tg"""
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
@@ -42,10 +31,32 @@ def send_message(message):
         raise telegram.TelegramError('Error tg message')
 
 
+def get_data(page, rarity, price_max):
+    retries = 0
+    success = 0
+    while retries <= 3 and success == 0:
+        try:
+            res = requests.get(
+                f'https://api-crypto.letmespeak.org/api/escrow?priceMin=1'
+                f'&priceMax={price_max}&visaLeftMin=3&visaLeftMax=240&rarity={rarity}'
+                f'&page={page}&sortBy=LowestPrice'
+            )
+            res_dict = json.loads(res.text)
+            success = 1
+            return res_dict.get('items')
+        except:
+            sleep(5)
+            retries += 1
+
+    return False
+
+
 def get_all_data(rarity, price_max):
     res = []
     page = 1
     data = get_data(page, rarity, price_max)
+    if not data:
+        return 'get_data error'
     while data:
         res += data
         page += 1
@@ -111,10 +122,16 @@ def get_good_nft(nfts, rarity):
 
 def main():
     nfts_epic = get_all_data(rarity=4, price_max=PRICE_MAX_EPIC)
-    good_nft_epic = get_good_nft(nfts_epic, rarity=4)
+    if nfts_epic == 'get_data error':
+        good_nft_epic = 'get_data error'
+    else:
+        good_nft_epic = get_good_nft(nfts_epic, rarity=4)
 
     nfts_leg = get_all_data(rarity=5, price_max=PRICE_MAX_LEG)
-    good_nft_leg = get_good_nft(nfts_leg, rarity=5)
+    if nfts_leg == 'get_data error':
+        good_nft_leg = 'get_data error'
+    else:
+        good_nft_leg = get_good_nft(nfts_leg, rarity=5)
 
     if good_nft_epic or good_nft_leg:
         message = (
