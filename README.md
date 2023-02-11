@@ -1,5 +1,5 @@
-# LMS NFT CHECKER
+# LMS CHECKER
 
-Download list of lms nfts and check them for good month profit
+Download list of nfts from market.letmespeak.org and check them for good month profit
 
 Send list of good nfts to telegram
